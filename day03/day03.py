@@ -58,19 +58,20 @@ def part1():
         for second in range(first+1,len(rect_list)):
             new_rect = rect_list[first].overlap(rect_list[second])
             if new_rect is not None:
+                rect_list[first].has_overlap = True
+                rect_list[second].has_overlap = True
                 for w in range(new_rect.left, new_rect.left + new_rect.width):
                     for h in range(new_rect.top, new_rect.top + new_rect.height):
                         if not overlap[w][h]:
                             total_overlap += 1
                         overlap[w][h] = 1
 
-    check_overlap = 0
-    for i in range(0,1000):
-        for j in range(0,1000):
-            check_overlap += overlap[i][j]
     print(f"Part 1: Overlap = {total_overlap}")
-    print(f"Part 1: Check Overlap = {check_overlap}")
 
+    for first in range(0,len(rect_list)):
+        if not rect_list[first].has_overlap:
+            print(f"Part 2: Swatch {first+1} has no overlap!")
+            
 if __name__ == "__main__":
     part1()
     #part2()

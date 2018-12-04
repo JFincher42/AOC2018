@@ -17,6 +17,7 @@ class Rect:
         self.top  = t
         self.width = w
         self.height = h
+        self.has_overlap = False
 
     def overlap(self, other):
         left = max(self.left, other.left)
