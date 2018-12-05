@@ -66,8 +66,20 @@ def part1():
             total_sleep = current_guard.get_total_sleep()
             sleepy_guard = current_guard
     
-    print(f"Sleepy guard is {sleepy_guard.id}, likely sleeptime is {sleepy_guard.most_likely_sleeptime()}, product is {sleepy_guard.most_likely_sleeptime() * sleepy_guard.id}.")
+    print(f"Part 1: Sleepy guard is {sleepy_guard.id}, likely sleeptime is {sleepy_guard.most_likely_sleeptime()}, product is {sleepy_guard.most_likely_sleeptime() * sleepy_guard.id}.")
+
+    # Part 2 - which guard is most frequently asleep on the same minute
+    sleepiest = 0
+    sleepiest_time = 0
+    sleepiest_guard = None
+    for current_guard in guards:
+        most_likely_sleeptime = current_guard.most_likely_sleeptime()
+        if current_guard.sleepcount[most_likely_sleeptime] >= sleepiest:
+            sleepiest_time = most_likely_sleeptime
+            sleepiest = current_guard.sleepcount[most_likely_sleeptime]
+            sleepiest_guard = current_guard
+   
+    print(f"Part 2: Sleepy guard is {sleepiest_guard.id}, sleepiest is {sleepiest_time}, product is {sleepiest_guard.id * sleepiest_time}.")
 
 if __name__ == "__main__":
     part1()
-    #part2()
