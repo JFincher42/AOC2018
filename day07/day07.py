@@ -9,8 +9,8 @@ def part1():
     steps = {}
 
     # Open the file and read each line
-    filename = "./day07/input.txt"
-    # filename = "./day07/sample.txt"
+    # filename = "./day07/input.txt"
+    filename = "./day07/sample.txt"
 
     # Read the file line by line
     # Track the maximum x and y coordinates so we know when we can stop
