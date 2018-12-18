@@ -24,21 +24,26 @@ def part1():
             if len(line) > 0:
                 if line[-2:-1] == "#":
                     plant_rules.append(line[0:5])
-                else:
-                    empty_rules.append(line[0:5])
+                # else:
+                    # empty_rules.append(line[0:5])
     
     generation = 0
     zero_pot = 3
+
     plant_count = 0
-    while generation < 20:
-        print(f" Generation {generation}: State: {current_state}")
+    single_step = False
+    while generation < 50000000000:
+        # print(f" Generation {generation}: State: {current_state}")
+        if generation >= 500:
+            print(f"Running generation {generation}...")
+            single_step = True
         next_state = current_state[0:2]
         current = 2
         while current < len(current_state):
             if current_state[current-2:current+3] in plant_rules:
                 next_state += "#"
-            elif current_state[current-2:current+3] in empty_rules:
-                next_state += "."
+            # elif current_state[current-2:current+3] in empty_rules:
+                # next_state += "."
             else:
                 next_state += "."
             current += 1
@@ -50,6 +55,15 @@ def part1():
             zero_pot += 1
         if current_state[-3] == "#":
             current_state = current_state + ".."
+        while current_state[0:4] == "....":
+            current_state = current_state[1:]
+            zero_pot -= 1
+
+
+        if single_step:
+            plant_count = count_plants(current_state, zero_pot)
+            print(f" Generation {generation-1}, plant count {plant_count}, zero={zero_pot}: State: {current_state}")
+            input()
     
     print(f" Generation {generation}: State: {current_state}")
     plant_count = count_plants(current_state, zero_pot)
