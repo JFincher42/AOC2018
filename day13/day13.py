@@ -2,14 +2,25 @@
 Day 13, AoC 2018
 '''
 
-
 def find_collision(cars):
     for i in range(len(cars)-1):
         for j in range(i+1,len(cars)):
-            if cars[i][0] == cars[j][0] and cars[i][1] == cars[j][1]:
-                return [cars[i][0],cars[i][1]]
+            # Ignore previous crashes
+            if cars[i][3] != "*" and cars[j][3] != "*":
+                if cars[i][0] == cars[j][0] and cars[i][1] == cars[j][1]:
+                    cars[i][3] = "*"
+                    cars[j][3] = "*"
+                    return [cars[i][0],cars[i][1]]
     return []
 
+def check_last_car(cars):
+    remaining_cars = len(cars) - sum([1 for car in cars if car[3] == "*"])
+    if remaining_cars == 1:
+        for i in range(len(cars)):
+            if cars[i][3] != "*":
+                return i
+    else:
+        return -1
 
 def part1():
     # Input File
@@ -59,8 +70,12 @@ def part1():
             # Which way are we headed? Get the next place to move
             current_step = maze[y][x]
             
+            # First, skip any cars in a collision already
+            if direction == "*":
+                pass
+
             # UP
-            if direction == "^":
+            elif direction == "^":
                 # First, which way do we move?
                 # If it's straight, keep going
                 if current_step == "|":
@@ -192,11 +207,17 @@ def part1():
             
             # Now check for a collision
             collision_location = find_collision(cars)
-            collision = (len(collision_location)>0)
-            if collision:
-                break
+            # collision = (len(collision_location)>0)
+            # if collision:
+            #     break
         
-        tick += 1
+        # Check for only one car left
+        last_car = check_last_car(cars)
+        if last_car == -1:
+            tick += 1
+        else:
+            print(f"Part 2: Last car at ({cars[last_car][0]}, {cars[last_car][1]})")
+            break
 
     print(f"Part 1: First collision at ({collision_location[0]}, {collision_location[1]}), tick {tick}")
 
