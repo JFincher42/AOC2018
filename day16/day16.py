@@ -85,6 +85,7 @@ def eqrr(A, B, C, registers):
     return registers
 
 opcodes = [addr, addi, mulr, muli, banr, bani, borr, bori, setr, seti, gtir, gtri, gtrr, eqir, eqri, eqrr]
+ordered_opcodes = [None]*16
 
 def part1():
     # Input File
@@ -108,16 +109,32 @@ def part1():
         # Skip a trailing blank line
         i += 4
 
-        matches = 0
+        matches = []
         # Loop through the opcodes and find which ones match the output
         for opcode in opcodes:
             if after_reg == opcode(instruction[1], instruction[2], instruction[3], before_reg.copy()):
-                matches += 1
+                if opcode not in ordered_opcodes:
+                    matches.append(opcode)
 
-        if matches >= 3:
-            triples += 1
+        if len(matches) == 1:
+            ordered_opcodes[instruction[0]] = matches[0]
 
-    print(f"Part 1: Number of triples = {triples}")
+    print(f"Part 2: Ordered count = {sum([1 for opcode in ordered_opcodes if opcode != None])}")
+
+    # Now we can run the program
+    # Starting register state
+    registers = [0, 0, 0, 0]
+
+    # Program file
+    filename = "./day16/input2.txt"
+
+    # Read the file
+    with open(filename, "r") as infile:
+        for line in infile:
+            instruction = [int(x) for x in line.split(" ")]
+            registers = ordered_opcodes[instruction[0]](instruction[1], instruction[2], instruction[3], registers)
+    
+    print(f"Part 2: Register[0] = {registers[0]}")
 
 if __name__ == "__main__":
     part1()
