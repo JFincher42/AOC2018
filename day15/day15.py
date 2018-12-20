@@ -4,6 +4,8 @@ Day 15 AOC 2018
 
 import actor
 
+def find_nearest(char, cave, step):
+    
 
 def part1():
     # Input File
@@ -38,29 +40,25 @@ def part1():
 
     # Now find what is in everyone's range to start
     for char in actors:
-        x = char.x
-        y = char.y
-        char.in_range.clear()
-        if cave[y - 1][x] == ".":
-            char.in_range.append([x, y - 1])
-        if cave[y][x - 1] == ".":
-            char.in_range.append([x - 1, y])
-        if cave[y][x + 1] == ".":
-            char.in_range.append([x + 1, y])
-        if cave[y + 1][x] == ".":
-            char.in_range.append([x, y + 1])
+        char.calc_in_range(cave)
 
     # OK, let's start - starting with round 0
     round = 0
 
-    # Get out initial count of goblins and elves
+    # Get the initial count of goblins and elves
     goblins = sum([1 for char in actors if char.actor_type == "G"])
     elves = sum([1 for char in actors if char.actor_type == "E"])
 
     # While there is still something to do
     while goblins > 0 and elves > 0:
-        # Do our thing
-        pass
+
+        for char in actors:
+
+            # I can only move if I'm not in someone's range
+            if not char.in_someones_range:
+
+                # We need the shortest path to an enemy
+                nearest_enemies = find_nearest(char, cave.copy(), 1)
 
     # Add the HP for the everyone left
     total_hp = sum([char.HP for char in actors if char.actor_type != "."])
