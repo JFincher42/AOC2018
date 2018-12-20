@@ -4,7 +4,16 @@ Day 15 AOC 2018
 
 import actor
 
-def find_nearest(char, cave, step):
+def find_nearest(char, actors, cave):
+    # Loop through the actors to find the nearest using Manhattan distance
+    for enemy in actors:
+        # Skip myself
+        if char.x == enemy.x and char.y == enemy.y:
+            pass
+        else:
+            distance = abs(char.x - enemy.x) + abs(char.y - enemy.y)
+            # Can we even get there?
+
     
 
 def part1():
@@ -58,7 +67,7 @@ def part1():
             if not char.in_someones_range:
 
                 # We need the shortest path to an enemy
-                nearest_enemies = find_nearest(char, cave.copy(), 1)
+                nearest_enemies = find_nearest(char, actors, cave)
 
     # Add the HP for the everyone left
     total_hp = sum([char.HP for char in actors if char.actor_type != "."])

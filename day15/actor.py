@@ -36,7 +36,6 @@ class Actor:
                                   cave[self.y][self.x - 1] == enemy_type or 
                                   cave[self.y][self.x + 1] == enemy_type or 
                                   cave[self.y + 1][self.x] == enemy_type)
-        
     
     def calc_damage(self, damage, cave):
         self.HP -= 3
