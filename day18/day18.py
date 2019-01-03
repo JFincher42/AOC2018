@@ -11,29 +11,65 @@ def part1():
     # Sample Input
     # filename = "./day18/sample.txt"
 
-    ground = []
+    ground1 = []
     # Read the file
     with open(filename, "r") as infile:
         for line in infile:
             ground_line = [char for char in line.strip()]
-            ground.append(ground_line)
+            ground1.append(ground_line)
+
+    ground2 = copy.deepcopy(ground1)
+
+    # Ground1 and Ground2 are the objects
+    # ground and new_ground are references
+    # We flip them at end of each loop, using flip to tell us which way
+    ground = ground1
+    new_ground = ground2
+    flip = True
 
     tick = 0
-    while tick < 10:
+    while tick <= 10:
+        # if tick%100000 == 0:
+        #     print(f"Tick: {tick}")
+        #     print_ground(ground)
         # print(f"Tick: {tick}")
         # print_ground(ground)
         # input()
 
-        new_ground = copy.deepcopy(ground)
         for y in range(len(new_ground)):
             for x in range(len(new_ground[y])):
-                if new_ground[y][x] == "." and check_open(new_ground, (x,y)):
-                    ground[y][x] = "|"
-                if new_ground[y][x] == "|" and check_trees(new_ground, (x,y)):
-                    ground[y][x] = "#"
-                if new_ground[y][x] == "#" and not check_lumber(new_ground, (x,y)):
-                    ground[y][x] = "."
+                if new_ground[y][x] == ".":
+                    if check_open(new_ground, (x,y)):
+                        ground[y][x] = "|"
+                    else:
+                        ground[y][x] = "."
+
+                elif new_ground[y][x] == "|":
+                    if check_trees(new_ground, (x,y)):
+                        ground[y][x] = "#"
+                    else:
+                        ground[y][x] = "|"
+
+                elif new_ground[y][x] == "#":
+                    if not check_lumber(new_ground, (x,y)):
+                        ground[y][x] = "."
+                    else:
+                        ground[y][x] = "#"
         tick += 1
+        if flip:
+            ground = ground2
+            new_ground = ground1
+        else:
+            ground = ground1
+            new_ground = ground2
+        flip = not flip
+
+    # if flip:
+    #     ground = ground2
+    #     new_ground = ground1
+    # else:
+    #     ground = ground1
+    #     new_ground = ground2
 
     trees = 0
     lumberyards = 0
