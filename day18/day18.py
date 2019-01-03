@@ -6,10 +6,10 @@ import copy
 
 def part1():
     # Input File
-    # filename = "./day18/input.txt"
+    filename = "./day18/input.txt"
 
     # Sample Input
-    filename = "./day18/sample.txt"
+    # filename = "./day18/sample.txt"
 
     ground1 = []
     # Read the file
@@ -27,11 +27,38 @@ def part1():
     new_ground = ground2
     flip = True
 
+    # Track the patterns we see
+    patterns = []
+    found_pattern = False
+
     tick = 0
-    while tick < 10:
-        print(f"Tick: {tick}")
-        print_ground(ground)
-        input()
+    while tick < 1000000000:
+        # print(f"Tick: {tick}")
+        # print_ground(ground)
+        # input()
+
+        # TODO: There's a pattern - I need to:
+        #  - find it, 
+        #  - figure out the cycle, and
+        #  - shortcut the 1,000,000,000 cycles accordingly
+
+        # Get the hash of the current ground state, and see if it's in our pattern list
+        # If so, we've found a repeat
+        # If not, we add it and continue
+
+        if not found_pattern:
+            ground_hash = hash(tuple(tuple(map(tuple, sub)) for sub in ground))
+            if ground_hash in patterns:
+                found_pattern = True
+                found_index = patterns.index(ground_hash)
+                print(f"Found current ground pattern at tick {found_index}, current tick {tick}")
+                diff = tick - found_index
+                backtrack = (1000000000-tick) % diff
+                tick = 1000000000 - backtrack
+                print(f"Diff is {diff}, backtrack is {backtrack}, new tick is {tick}")
+                input()
+            else:
+                patterns.append(ground_hash)
 
         # Setup ground and new_ground
         if flip:
@@ -45,11 +72,6 @@ def part1():
         # if tick%10000 == 0:
         #     print(f"Tick: {tick}")
         #     print_ground(ground)
-
-        # TODO: There's a pattern - I need to:
-        #  - find it, 
-        #  - figure out the cycle, and
-        #  - shortcut the 1,000,000,000 cycles accordingly
 
         for y in range(len(new_ground)):
             for x in range(len(new_ground[y])):
