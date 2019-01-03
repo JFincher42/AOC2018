@@ -6,10 +6,10 @@ import copy
 
 def part1():
     # Input File
-    filename = "./day18/input.txt"
+    # filename = "./day18/input.txt"
 
     # Sample Input
-    # filename = "./day18/sample.txt"
+    filename = "./day18/sample.txt"
 
     ground1 = []
     # Read the file
@@ -28,13 +28,28 @@ def part1():
     flip = True
 
     tick = 0
-    while tick <= 10:
-        # if tick%100000 == 0:
+    while tick < 10:
+        print(f"Tick: {tick}")
+        print_ground(ground)
+        input()
+
+        # Setup ground and new_ground
+        if flip:
+            ground = ground1
+            new_ground = ground2
+        else:
+            ground = ground2
+            new_ground = ground1
+        flip = not flip
+
+        # if tick%10000 == 0:
         #     print(f"Tick: {tick}")
         #     print_ground(ground)
-        # print(f"Tick: {tick}")
-        # print_ground(ground)
-        # input()
+
+        # TODO: There's a pattern - I need to:
+        #  - find it, 
+        #  - figure out the cycle, and
+        #  - shortcut the 1,000,000,000 cycles accordingly
 
         for y in range(len(new_ground)):
             for x in range(len(new_ground[y])):
@@ -56,13 +71,6 @@ def part1():
                     else:
                         ground[y][x] = "#"
         tick += 1
-        if flip:
-            ground = ground2
-            new_ground = ground1
-        else:
-            ground = ground1
-            new_ground = ground2
-        flip = not flip
 
     # if flip:
     #     ground = ground2
