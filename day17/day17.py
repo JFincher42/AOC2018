@@ -3,6 +3,7 @@ Day 17  - AoC 2018
 '''
 
 import queue
+import sys
 
 def print_ground(ground, min_x, max_x):
     print("GROUND:")
@@ -75,16 +76,21 @@ def part1():
     ground = make_ground(max_x, max_y, clay_veins)
     ground[0][500] = "|"
 
+    sys.setrecursionlimit(5000)
+
     # The initial water source is always in the same place
     fill_down(ground, (500,0), max_y)
     # print_ground(ground, min_x, max_x)
 
     # Now we need to count the water
     water_count = 0
+    standing_water = 0
     for line in ground[min_y:max_y+1]:
+        standing_water += line.count("~")
         water_count += line.count("~") + line.count("|")
                   
     print(f"Water count: {water_count}")
+    print(f"Standing water: {standing_water}")
 
 def fill_down(ground, source, max_y):
     # Get the current x and y values
@@ -109,7 +115,7 @@ def fill_down(ground, source, max_y):
         ground[cy][cx-1] = "|"
         fill_down(ground, (cx-1, cy), max_y)
 
-    #
+    # Change the | chars to ~ chars if we have walls
     if has_walls(ground, (cx, cy)):
         fill_level(ground, (cx, cy))
 
