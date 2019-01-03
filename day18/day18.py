@@ -47,11 +47,16 @@ def part1():
         # If not, we add it and continue
 
         if not found_pattern:
+            # Need to turn it into a tuple to hash it
             ground_hash = hash(tuple(tuple(map(tuple, sub)) for sub in ground))
+
+            # Did we find it?
             if ground_hash in patterns:
                 found_pattern = True
                 found_index = patterns.index(ground_hash)
                 print(f"Found current ground pattern at tick {found_index}, current tick {tick}")
+
+                # Figure out where it would repeat closest to the end of the cycle
                 diff = tick - found_index
                 backtrack = (1000000000-tick) % diff
                 tick = 1000000000 - backtrack
