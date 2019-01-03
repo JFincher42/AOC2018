@@ -87,7 +87,7 @@ def part1():
         # - If it's sand, we move the head down to it
         # - If it's clay, we stop and check some assumptions
 
-        print_ground(ground, min_x, max_x)
+        #print_ground(ground, min_x, max_x)
         for current_head in water_heads:
             cx, cy = current_head
             if ground[cy+1][cx] == ".":
@@ -191,7 +191,7 @@ def part1():
 
     # Now we need to count the water
     water_count = 0
-    for line in ground[min_y+1:max_y+1]:
+    for line in ground[min_y:max_y+1]:
         water_count += line.count("~")
                   
     print(f"Water count: {water_count}")
