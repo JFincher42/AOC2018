@@ -2,8 +2,14 @@
 Day 17  - AoC 2018
 '''
 
+def print_ground(ground, min_x, max_x):
+    print("GROUND:")
+    for y in range(len(ground)):
+        print(''.join(str(e) for e in ground[y][min_x-5:max_x+5]))
+    print()
+
 def make_ground(max_x, max_y, clay_veins):
-    ground = [["."] * max_x for i in range(max_y+1)]
+    ground = [["."] * (max_x+10) for i in range(max_y+5)]
     for clay in clay_veins:
         ground[clay[1]][clay[0]] = "#"
     return ground
@@ -69,7 +75,7 @@ def part1():
     # The initial water source is always in the same place
     # There may be more than one stream, however, so track them all here
     water_heads = [[500, 0]]
-    ground[500,0] = "~"
+    ground[0][500] = "~"
 
     # Just a counter
     round = 0
@@ -81,6 +87,7 @@ def part1():
         # - If it's sand, we move the head down to it
         # - If it's clay, we stop and check some assumptions
 
+        print_ground(ground, min_x, max_x)
         for current_head in water_heads:
             cx, cy = current_head
             if ground[cy+1][cx] == ".":
@@ -94,15 +101,24 @@ def part1():
                 # - We hit the top of a wall
                 # We check by looking left and right, then down
                 # If we're on the top of a wall, one or both will be sand
-                if ground[cy+2][cx-1] == "." or ground[cy+2][cx+1] == ".":
-                    # Here, we move our water head, and a new water head
-                    current_head[0] = cx-1
-                    current_head[1] = cy
-                    water_heads.append([cx+1, cy])
-                    # Draw the new water
-                    ground[cy][cx-1] = "~"
-                    ground[cy][cx+1] = "~"
-                
+
+                if ground[cy+1][cx-1] == "." or ground[cy+1][cx+1] == ".":
+                    add_new_head = False
+                    if ground[cy+2][cx-1] == ".":
+                        # Here, we move our water head, and state a new water head is needed
+                        current_head[0] = cx-1
+                        current_head[1] = cy
+                        add_new_head = True
+                        ground[cy][cx-1] = "~"
+
+                    if ground[cy+2][cx-1] == ".":
+                        if add_new_head:
+                            water_heads.append([cx+1, cy])
+                        else:
+                            current_head[0] = cx-1
+                            current_head[1] = cy
+                            ground[cy][cx+1] = "~"
+
                 else:
                     # We're on the bottom of a basin
                     # We fill it bottom to top
@@ -124,32 +140,61 @@ def part1():
                     #   When we do, we move the current head to the open end
                     #   If there's another open end, we create a new head there as well
 
+                    # First, fill this line
                     ground[cy][lx:rx+1] = "~"*(rx-lx+1)
+
+                    # Have we found the top?
+                    found_top = False
+                    while not found_top:
+                        # Move up one line
+                        cy -= 1
+
+                        # Are we at the top?
+                        if ground[cy][lx-1] != "#" or ground[cy][rx+1] != "#":
+                            found_top = True
+                            # First, draw the water
+                            ground[cy][lx:rx+1] = "~"*(rx-lx+1)
+                            # Now figure out the head thing
+                            add_new_head = False
+                            if ground[cy][lx-1] != "#":
+                                # Here, we move our water head, and state a new water head is needed
+                                current_head[0] = lx-2
+                                current_head[1] = cy
+                                add_new_head = True
+                                ground[cy][lx-1] = "~"
+                                ground[cy][lx-2] = "~"
+
+                            if ground[cy][rx+1] != "#":
+                                if add_new_head:
+                                    water_heads.append([rx+2, cy])
+                                else:
+                                    current_head[0] = rx+2
+                                    current_head[1] = cy
+                                ground[cy][rx+1] = "~"
+                                ground[cy][rx+2] = "~"
                         
+                        # Not at the top, so now find the new lx/rx
+                        else:
+                            nlx, nrx = cx, cx
+                            while ground[cy][nlx-1] == ".":
+                                nlx -= 1
+                            while ground[cy][nrx+1] == ".":
+                                nrx += 1
+                            lx = nlx
+                            rx = nrx
+                            # And draw the water
+                            ground[cy][lx:rx+1] = "~"*(rx-lx+1)
 
-                    
-        
-        # When we hit clay, we are in a basin, so we find and mark those sides.
-        #
-        # Three things can happen on every line:
-        # - We find the basin walls to the left and right
-        #   We fill that line and move the head up
-        #
-        # - We find clay only on one side (we pass the basin wall)
-        #   We move the head to the open side (one past the wall)
-        #   We fill between the head and the clay
-        #
-        # - We find clay on neither side (we pass the basin wall on both sides)
-        #   We create a new head on one side, and move the current head to the other
-        #   We fill between the two new heads.
-        #
-        
-
-        # Now we find out if we're further down than the other heads
+        # Once we're done processing all the head waters, we can find our new minimums
+        head_min_x, head_min_y = find_min(water_heads)
 
 
-
-    print(f"X Extents: {min_x} to {max_x}, Y Extents: {min_y} to {max_y}")
+    # Now we need to count the water
+    water_count = 0
+    for line in ground[min_y+1:max_y+1]:
+        water_count += line.count("~")
+                  
+    print(f"Water count: {water_count}")
 
 if __name__ == "__main__":
     part1()
