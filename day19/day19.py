@@ -85,10 +85,10 @@ def eqrr(A, B, C, registers):
 
 def part1():
     # Input File
-    # filename = "./day19/input.txt"
+    filename = "./day19/input.txt"
 
     # Sample Input
-    filename = "./day19/sample.txt"
+    # filename = "./day19/sample.txt"
 
     # Registers and other important things
     registers = [0, 0, 0, 0, 0, 0]
