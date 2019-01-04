@@ -91,7 +91,11 @@ def part1():
     # filename = "./day19/sample.txt"
 
     # Registers and other important things
+    # Part 1
     registers = [0, 0, 0, 0, 0, 0]
+    # Part 2
+    # registers = [1, 0, 0, 0, 0, 0]
+
     ip = 0
     ip_register = 0
     program = []
@@ -134,5 +138,17 @@ def part1():
 
     print(f"Program done, registers[0]={registers[0]}")
 
+def factor(num):
+    sum = 1
+    print("Factor: 1")
+    for x in range(2,num+1):
+        if num % x == 0:
+            print(f"Factor: {x}")
+            sum += x
+    print(f"Sum = {sum}")
+
 if __name__ == "__main__":
-    part1()
+    factor(947)
+    print()
+    factor(10551347)
+    #part1()

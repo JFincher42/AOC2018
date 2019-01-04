@@ -1,4 +1,9 @@
 {
     "python.pythonPath": "/home/jon/.local/share/virtualenvs/AoC2018-7zFdeWSA/bin/python",
-    "python.formatting.provider": "black"
+    "python.formatting.provider": "black",
+    "spellright.language": [],
+    "spellright.documentTypes": [
+        "markdown",
+        "latex"
+    ]
 }

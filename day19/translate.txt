@@ -1,0 +1,53 @@
+
+
+
+00: jmp 17             # This preloads R4 with a big number
+
+When we get there, the registers are:
+|R0  |R1  |R2          |R3  |R4          |R5
++====+====+============+====+============+===
+|0   |0   |10550400    |1   |10551347    |0   
+
+# This stretch of code finds the prime factors of the number in R4, and adds them together
+
+01: R1 = 1                                          R1 = 1
+02: R5 = 1                                          R5 = 1
+03: R2 = R1*R5                                      
+04: if R2 == R4: R2=1 else: R2=0                    if R5*R1 == R4:
+05: JMP 6 + R2
+06: JMP 8                                           
+07: R0 += R1                                            R0 += 1
+08: R5 += R1                                        R5 += 1
+09: if R5 > R4: R2 = 1 else: R2 = 0                 if R5 > R4:
+10: JMP 11 + R2                                         
+11: JMP 3
+12: R1 += 1                                             R1 += 1
+13: if R1 > R4: R2 = 1 else: R2 = 0                     if R1 > R4:
+14: JMP 15 + R2                                             print R0
+15: JMP 2                                               else:
+16: JMP 257   # AKA End                                     continue
+
+# Make R4 big
+17: R4 += 2    # Add 2                  R4 = 2
+18: R4 *= R4   # Square it              R4 = 4
+19: R4 *= 19   # Current IP             R4 = 76
+20: R4 *= 11                            R4 = 836
+21: R2 += 5                             R2 = 5
+22: R2 *= 22   # Current IP             R2 = 110
+23: R2 += 1                             R2 = 111
+24: R4 += R2                            R4 = 947
+
+# If R0 = 0, we stop here, jump to IP=1, and R4 is managable in a short period of time
+# If R1 = 1, we continue at IP=27, R4 gets really big, and we won't finish for a while.
+
+25: jmp 26+R0  # Add R0 to IP and jmp   Goto 27
+26: jmp 1      # To the beginning       SKIP!
+27: R2 = 27    # Current IP             R2 = 27
+28: R2 *= 28                            R2 = 756
+29: R2 += 29                            R2 = 785
+30: R2 *= 30                            R2 = 23550
+31: R2 *= 14                            R2 = 329700
+32: R2 *= 32                            R2 = 10550400
+33: R4 += R2                            R4 = 10551347
+34: R0 = 0                              R0 = 0
+35: jmp 1                               Back to the beginning
