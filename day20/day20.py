@@ -18,8 +18,8 @@ def part1():
     # filename = "./day20/sample1.txt"
     # filename = "./day20/sample2.txt"
     # filename = "./day20/sample3.txt"
-    filename = "./day20/sample4.txt"
-    # filename = "./day20/sample5.txt"
+    # filename = "./day20/sample4.txt"
+    filename = "./day20/sample5.txt"
 
     # Setup a global numpy array to track our position
     # We encode open doors in bytes
@@ -28,7 +28,7 @@ def part1():
     # -           4: South
     #
     # We assume all doors marked zero are closed
-    map = np.zeros([100,100], dtype=np.int64)
+    map = np.zeros([10,10], dtype=np.int64)
     
     # Start in the middle
     # We can add items as necessary to grow the array
@@ -36,7 +36,7 @@ def part1():
     # Add to the SOUTH: map = np.insert(map, map.shape[0], [0], 0)
     # Add to the EAST:  map = np.insert(map, map.shape[1], [0], 1)
     # Add to the WEST:  map = np.insert(map,           0 , [0], 1)
-    cx, cy = (50, 50)
+    cx, cy = (5, 5)
 
     # Read the file
     with open(filename, "r") as infile:
@@ -97,6 +97,7 @@ def parse(ch, infile, cx, cy):
             if cy == 0:
                 map = np.insert(map, 0, [0], 0)
                 cy += 1
+                save_cy += 1
             cy -= 1
             # Now add a south door here
             map[cy, cx] |= SOUTH
@@ -120,6 +121,7 @@ def parse(ch, infile, cx, cy):
             if cx == 0:
                 map = np.insert(map, 0, [0], 1)
                 cx += 1
+                save_cx += 1
             cx -= 1
             # Now add an east door here
             map[cy, cx] |= EAST
@@ -129,7 +131,7 @@ def parse(ch, infile, cx, cy):
             map[cy, cx] |= EAST
 
             # Can we move east? If not, add a row to the right
-            if cy == map.shape[1]:
+            if cx == map.shape[1]:
                 map = np.insert(map, map.shape[1], [0], 1)
             cx += 1
             # Now add a west door here
@@ -142,8 +144,9 @@ def parse(ch, infile, cx, cy):
 
         # A branch char - we recurse, but from our saved position
         elif ch == "|":
-            ch = infile.read(1)
-            parse(ch, infile, save_cx, save_cy)
+            # Reset CX/CY to the saved values
+            cx, cy = save_cx, save_cy
+            # parse(ch, infile, save_cx, save_cy)
 
         # Something else - just return
         else:
