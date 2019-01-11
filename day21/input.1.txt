@@ -7,19 +7,35 @@
 03: addr 2 1 1                          Jump to 5
 04: seti 0 0 1                      Else Jump to 1
 
-#
+# This is seeding a pseudo-random number generator
+# Initially, R5 = 65536, but this changes every loop
 05: seti 0 3 2                      Set R2 = 0
-06: bori 2 65536 5                  Set R5 = 0b 0000 0000 0000 0000 0001 0000 (65536)
+06: bori 2 65536 5                  Set R5 = 0b 0000 0000 0000 0001 0000 0000 (65536)
+
+# Set R2 to an initially high number. Note 4843319 is NOT PRIME
 07: seti 4843319 1 2                Set R2 = 0b 0100 1001 1110 0111 0011 0111 (4843319)
+
+# Loop entry
+# Grab the low eight bits and put them in R4, then add that to R2
 08: bani 5 255 4                    Set R5 = 0b 1111 1111 & R5 (0001 0000)
 09: addr 2 4 2                      R2 = R2 + R4 
+
+# Take the lower 24 bits of R2, multiply them by 65899, and truncate to 24 bits
+# Note that 65899 IS PRIME
 10: bani 2 16777215 2               Set R2 = R2 & 0b 1111 1111 1111 1111 1111 1111 (16777215) (low 24 bits)
 11: muli 2 65899 2                  Set R2 = R2 * 0b 0000 0001 0000 0001 0110 1011 (65899)
 12: bani 2 16777215 2               Set R2 = R2 & 0b 1111 1111 1111 1111 1111 1111 (16777215) (low 24 bits)
+
+# If R5 < 256
+#   Check if R0 = R2 (longshot)
+#   If so, we're done
+#   Else we go back to IP=6
 13: gtir 256 5 4                    If R5 < 256
 14: addr 4 1 1                          Jump to 16 (28 eventually)
 15: addi 1 1 1                      Else Jump to 17
 16: seti 27 4 1                     Jump to 28
+
+# If R5 >= 256, then divide R5 by 256, store that in R5, and back to IP=8
 17: seti 0 7 4                      R4 = 0
 18: addi 4 1 3                      R3 = R4 + 1
 19: muli 3 256 3                    R3 *= 256 (R3 << 8)
@@ -31,6 +47,7 @@
 25: seti 17 0 1                     Jump to 18
 26: setr 4 1 5                      R5 = R4
 27: seti 7 3 1                      Jump to 8
+
 28: eqrr 2 0 4                      if R2 = R0
 29: addr 4 1 1                          Jump to 31 (aka end)
 30: seti 5 3 1                      Jump to 6
