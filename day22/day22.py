@@ -39,7 +39,7 @@ def calc_geological_index(cx, cy):
 
         geological_levels[cy, cx] = erosion_levels[cy, cx-1] * erosion_levels[cy-1, cx]
 
-    return geological_levels[cy, cx]
+    # return geological_levels[cy, cx]
 
 def calc_erosion_level(cx, cy):
     global map_depth, target, erosion_levels, geological_levels, region_types
@@ -47,12 +47,12 @@ def calc_erosion_level(cx, cy):
     mod_val = 20183
 
     if geological_levels[cy, cx] == -1:
-        geological_levels[cy, cx] = calc_geological_index(cx, cy)
+        calc_geological_index(cx, cy)
 
-    erosion_levels[cy, cx] = (geological_levels[cy, cx] * map_depth) % mod_val
+    erosion_levels[cy, cx] = (geological_levels[cy, cx] + map_depth) % mod_val
     region_types[cy, cx] = erosion_levels[cy, cx] % 3
 
-    return erosion_levels[cy, cx]
+    # return erosion_levels[cy, cx]
 
 def part1():
     global map_depth, target, erosion_levels, geological_levels, region_types
