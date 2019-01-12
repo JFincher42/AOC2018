@@ -5,12 +5,12 @@ AoC 2018 Day 22
 import numpy as np          # For the map and numeric manipulations
 
 # Real data
-# map_depth = 8787
-# target = (725, 10)      # (Y coord first)
+map_depth = 8787
+target = (725, 10)      # (Y coord first)
 
 # Sample data - answer should be 114
-map_depth = 510
-target = (10, 10)       # (Y coord first)
+# map_depth = 510
+# target = (10, 10)       # (Y coord first)
 
 def calc_geological_index(cx, cy):
     global map_depth, target, erosion_levels, geological_levels, region_types
@@ -59,9 +59,9 @@ def part1():
 
     # Setup map based on Input Data
     cy, cx = target
-    erosion_levels = np.ones([cy+1, cx+1], dtype=np.int64)
-    geological_levels = np.ones([cy+1, cx+1], dtype=np.int64)
-    region_types = np.ones([cy+1, cx+1], dtype=np.int64)
+    erosion_levels = np.ones([cy+2, cx+2], dtype=np.int64)
+    geological_levels = np.ones([cy+2, cx+2], dtype=np.int64)
+    region_types = np.ones([cy+2, cx+2], dtype=np.int64)
     erosion_levels *= -1
     geological_levels *= -1
     region_types *= -1
@@ -74,19 +74,22 @@ def part1():
             calc_erosion_level(map_x, map_y)
             risk += region_types[map_y, map_x]
 
+    risk -= region_types[0,0]
+    risk -= region_types[cy, cx]
+
     # Print the risk
     print(f"Part 1: Risk = {risk}")
 
     # Just to see it, let's print the map
-    print_map()
+    # print_map()
 
 def print_map():
     global target, region_types
 
     cy, cx = target
-    for map_y in range(cy+1):
+    for map_y in range(cy+2):
         line = []
-        for map_x in range(cx+1):
+        for map_x in range(cx+2):
             if map_y == 0 and map_x == 0:
                 line.append("M")
             elif map_y == cy and map_x == cx:
